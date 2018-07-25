@@ -8,6 +8,7 @@ import (
 	"github.com/oschwald/geoip2-golang"
 	"log"
 	"net/http"
+	"github.com/gorilla/mux"
 )
 
 const (
@@ -25,9 +26,9 @@ func NewServer(reader *geoip2.Reader) *server {
 }
 
 func (s *server) Start() {
-	http.HandleFunc(parserURL, s.parserHandler)
-	//todo handle start listen and serve error
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	router := mux.NewRouter()
+	router.HandleFunc(parserURL, s.parserHandler).Methods(http.MethodPost)
+	log.Fatal(http.ListenAndServe(":8080", router))
 }
 
 func (s *server) parserHandler(w http.ResponseWriter, r *http.Request) {

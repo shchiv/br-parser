@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"github.com/br-parser/src/model"
 	"github.com/bsm/openrtb"
+	"github.com/gorilla/mux"
 	"github.com/mssola/user_agent"
 	"github.com/oschwald/geoip2-golang"
 	"log"
 	"net/http"
-	"github.com/gorilla/mux"
 )
 
 const (

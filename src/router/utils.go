@@ -2,7 +2,7 @@ package router
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
 	"github.com/bsm/openrtb"
 	"github.com/mssola/user_agent"
 	"github.com/oschwald/geoip2-golang"
@@ -42,13 +42,12 @@ func getBrowser(ua *user_agent.UserAgent) string {
 		log.Println("Can't get browser. User agent is nil")
 		return undefined
 	}
-	browser, version := ua.Browser()
-	return fmt.Sprintf("%s %s", browser, version)
+	browser, _ := ua.Browser()
+	return browser
 }
 
 func getCountry(reader *geoip2.Reader, IP string) string {
 	if reader == nil {
-		//TODO handle
 		log.Printf("Can't get country for IP %s. Reader is nil", IP)
 		return undefined
 	}
@@ -96,5 +95,15 @@ func renderResponse(statusCode int, w http.ResponseWriter, value interface{}) {
 	w.WriteHeader(statusCode)
 	if err := json.NewEncoder(w).Encode(value); err != nil {
 		log.Printf("Can't render response with Status %d Value %+v. Error %s", statusCode, value, err.Error())
+	}
+}
+
+func CreateReader() (*geoip2.Reader, error) {
+	if reader, err := geoip2.Open("./resources/GeoLite2-Country.mmdb"); err != nil {
+		return nil, err
+	} else if reader == nil {
+		return nil, errors.New("GeoIP reader is nil")
+	} else {
+		return reader, nil
 	}
 }

@@ -21,7 +21,7 @@ func main() {
 }
 
 func createReader() (*geoip2.Reader, error) {
-	if reader, err := geoip2.Open("GeoLite2-Country.mmdb"); err != nil {
+	if reader, err := geoip2.Open("./resources/GeoLite2-Country.mmdb"); err != nil {
 		return nil, err
 	} else if reader == nil {
 		return nil, errors.New("GeoIP reader is nil")
